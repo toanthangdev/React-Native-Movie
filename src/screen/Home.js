@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, TouchableOpaci
 import SPACING from '../../assets/config/SPACING'
 import API from '../../assets/config/APIs'
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
 
     const [data, setData] = useState([])
     const [genres, setGenres] = useState([])
@@ -39,20 +39,20 @@ const Home = ({navigation}) => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 6 }}>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: SPACING * 4, fontWeight: '400' }}>WOOKIE</Text>
-                <Text style={{ fontSize: SPACING * 4, fontWeight: '400' }}>MOVIES</Text>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.textHeader}>WOOKIE</Text>
+                <Text style={styles.textHeader}>MOVIES</Text>
             </View>
-            <View style={{ flex: 5, paddingHorizontal: SPACING * 2 }}>
+            <View style={styles.body}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {genres.map((genre, index) => (
                         <View key={index}>
-                            <Text style={{ fontSize: SPACING * 3, marginVertical: SPACING }}>{genre}</Text>
+                            <Text style={styles.textGenre}>{genre}</Text>
                             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                                 {data.map((item, index) => (
-                                    <TouchableOpacity key={index} onPress={() => navigation.navigate('Detail', {id: item.id})}>
-                                        {item.genres.includes(genre) ? <Image style={{ width: SPACING * 15, height: SPACING * 30, marginRight: SPACING, borderRadius: SPACING * 2 }} source={{ uri: item.poster }} /> : null}
+                                    <TouchableOpacity key={index} onPress={() => navigation.navigate('Detail', { id: item.id })}>
+                                        {item.genres.includes(genre) ? <Image style={styles.imageGenre} source={{ uri: item.poster }} /> : null}
                                     </TouchableOpacity>
                                 ))}
                             </ScrollView>
@@ -60,7 +60,7 @@ const Home = ({navigation}) => {
                     ))}
                 </ScrollView>
             </View>
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 
@@ -68,8 +68,21 @@ export default Home
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+        flex: 6,
+    },
+    header: {
+        flex: 1, justifyContent: 'center', alignItems: 'center'
+    },
+    textHeader: {
+        fontSize: SPACING * 4, fontWeight: '400'
+    },
+    body: {
+        flex: 5, paddingHorizontal: SPACING * 2
+    },
+    textGenre: {
+        fontSize: SPACING * 3, marginVertical: SPACING
+    },
+    imageGenre: {
+        width: SPACING * 15, height: SPACING * 30, marginRight: SPACING, borderRadius: SPACING * 2
     }
 })

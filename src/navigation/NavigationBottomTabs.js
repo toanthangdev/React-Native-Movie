@@ -1,6 +1,6 @@
 import React from 'react'
 import HomeStack from './navigationStack/HomeStack'
-import Search from '../screen/Search'
+import SearchStack from './navigationStack/SearchStack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -24,7 +24,7 @@ const NavigationBottomTabs = () => {
                 }
             })}>
                 <Tab.Screen options={{ tabBarLabel: 'Home' }} name='HomeStack' component={HomeStack} />
-                <Tab.Screen name='Search' component={Search} />
+                <Tab.Screen options={{ tabBarLabel: 'Search' }} name='SearchStack' component={SearchStack} />
             </Tab.Navigator>
         </NavigationContainer>
     )
