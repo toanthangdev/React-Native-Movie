@@ -69,6 +69,7 @@ export default Home
 const styles = StyleSheet.create({
     container: {
         flex: 6,
+        marginTop: SPACING * 2
     },
     header: {
         flex: 1, justifyContent: 'center', alignItems: 'center'
@@ -83,6 +84,6 @@ const styles = StyleSheet.create({
         fontSize: SPACING * 3, marginVertical: SPACING
     },
     imageGenre: {
-        width: SPACING * 15, height: SPACING * 30, marginRight: SPACING, borderRadius: SPACING * 2
+        width: SPACING * 15, height: SPACING * 30, marginRight: SPACING, borderRadius: SPACING * 1.5
     }
 })
