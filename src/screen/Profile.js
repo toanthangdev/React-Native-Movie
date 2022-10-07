@@ -142,36 +142,17 @@ export default Profile = ({ navigation }) => {
           likeArray.map((like, index) =>
             movie.id == like ? (
               <TouchableOpacity
-                onPress={() => navigation.navigate("Detail", {id: movie.id})}
+                onPress={() => navigation.navigate("Detail", { id: movie.id })}
                 key={index}
-                style={{
-                  marginHorizontal: SPACING * 2,
-                  borderRadius: SPACING,
-                  overflow: "hidden",
-                  marginBottom: SPACING * 2,
-                }}
+                style={styles.movieBody}
               >
                 <ImageBackground
-                  style={{
-                    width: "100%",
-                    height: 200,
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
+                  style={styles.backgroundMovie}
                   source={{
                     uri: movie.backdrop,
                   }}
                 >
-                  <View
-                    style={{
-                      backgroundColor: "red",
-                      width: "30%",
-                      height: "90%",
-                      marginHorizontal: SPACING,
-                      borderRadius: SPACING * 2,
-                      overflow: "hidden",
-                    }}
-                  >
+                  <View style={styles.movieData}>
                     <Image
                       style={{ width: "100%", height: "100%" }}
                       source={{
@@ -179,22 +160,8 @@ export default Profile = ({ navigation }) => {
                       }}
                     />
                   </View>
-                  <View
-                    style={{
-                      width: "60%",
-                      height: "90%",
-                      justifyContent: "space-evenly",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "#FFFFFF",
-                        fontSize: SPACING * 2,
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {movie.title}
-                    </Text>
+                  <View style={styles.movieText}>
+                    <Text style={styles.textTitle}>{movie.title}</Text>
                     <View
                       style={{ flexDirection: "row", alignItems: "flex-end" }}
                     >
@@ -203,13 +170,7 @@ export default Profile = ({ navigation }) => {
                         size={SPACING * 1.5}
                         color="#FFF"
                       />
-                      <Text
-                        style={{
-                          fontSize: SPACING,
-                          color: "#FFF",
-                          fontWeight: "600",
-                        }}
-                      >
+                      <Text style={styles.textRelease}>
                         {" " +
                           movie.released_on.slice(
                             0,
@@ -223,11 +184,7 @@ export default Profile = ({ navigation }) => {
                         color="#FFF"
                       />
                       <Text
-                        style={{
-                          fontSize: SPACING,
-                          color: "#FFF",
-                          fontWeight: "600",
-                        }}
+                        style={styles.textRelease}
                       >
                         {" " + movie.length}
                       </Text>
@@ -332,5 +289,39 @@ const styles = StyleSheet.create({
   favoriteMoviesText: {
     fontSize: SPACING * 2.5,
     fontWeight: "bold",
+  },
+  movieBody: {
+    marginHorizontal: SPACING * 2,
+    borderRadius: SPACING,
+    overflow: "hidden",
+    marginBottom: SPACING * 2,
+  },
+  backgroundMovie: {
+    width: "100%",
+    height: 200,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  movieData: {
+    width: "30%",
+    height: "90%",
+    marginHorizontal: SPACING,
+    borderRadius: SPACING * 2,
+    overflow: "hidden",
+  },
+  movieText: {
+    width: "60%",
+    height: "90%",
+    justifyContent: "space-evenly",
+  },
+  textTitle: {
+    color: "#FFFFFF",
+    fontSize: SPACING * 2,
+    fontWeight: "bold",
+  },
+  textRelease: {
+    fontSize: SPACING,
+    color: "#FFF",
+    fontWeight: "600",
   },
 })
