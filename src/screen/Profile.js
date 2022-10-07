@@ -6,18 +6,24 @@ import {
   SafeAreaView,
   Image,
   ScrollView,
+  ImageBackground,
+  TouchableOpacity,
 } from "react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import AntDesign from "react-native-vector-icons/AntDesign"
 import SPACING from "../../assets/config/SPACING"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import API from "../../assets/config/APIs"
 
 export default Profile = ({ navigation }) => {
   const [dataAPIs, setDataAPIs] = useState([])
   const [likeArray, setLikedArray] = useState([])
+  const [data, setData] = useState([])
 
   useEffect(() => {
     const focusHandler = navigation.addListener("focus", () => {
+      getAPIs()
       getLiked()
     })
     return focusHandler
@@ -27,17 +33,6 @@ export default Profile = ({ navigation }) => {
     API.defaults.headers.common["Authorization"] = "Bearer Wookie2019"
     API.get("movies")
       .then((res) => {
-        res.data.movies.forEach((item) => {
-          if (item.id === route.params.id) {
-            setData(item)
-            setRating(item.imdb_rating)
-            setYearReleased(
-              item.released_on.slice(0, item.released_on.indexOf("-"))
-            )
-            setCast(item.cast)
-            setDirector(item.director)
-          }
-        })
         setDataAPIs(res.data.movies)
       })
       .catch((error) => {
@@ -62,7 +57,6 @@ export default Profile = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {console.log(likeArray)}
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.titleBar}>
           <Ionicons name="ios-arrow-back" size={24} color="#52575D" />
@@ -99,8 +93,12 @@ export default Profile = ({ navigation }) => {
         </View>
         <View style={styles.statsContainer}>
           <View style={styles.statsBox}>
-            <Text style={[styles.text, { fontSize: 24 }]}>483</Text>
-            <Text style={[styles.text, styles.subText]}>Posts</Text>
+            <Text style={[styles.text, { fontSize: 24 }]}>
+              {likeArray.length}
+            </Text>
+            <Text style={[styles.text, styles.subText]}>
+              {likeArray.length == 1 ? "Movie" : "Movies"}
+            </Text>
           </View>
           <View
             style={[
@@ -112,44 +110,134 @@ export default Profile = ({ navigation }) => {
               },
             ]}
           >
-            <Text style={[styles.text, { fontSize: 24 }]}>483</Text>
-            <Text style={[styles.text, styles.subText]}>Posts</Text>
+            <Text style={[styles.text, { fontSize: 24 }]}>1000</Text>
+            <Text style={[styles.text, styles.subText]}>Follower</Text>
           </View>
           <View style={styles.statsBox}>
-            <Text style={[styles.text, { fontSize: 24 }]}>483</Text>
-            <Text style={[styles.text, styles.subText]}>Posts</Text>
+            <Text style={[styles.text, { fontSize: 24 }]}>10000</Text>
+            <Text style={[styles.text, styles.subText]}>Following</Text>
           </View>
         </View>
         <View style={{ marginTop: 32 }}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View style={styles.mediaImageContainer}>
-              <Image
-                source={require("../../assets/image/media1.jpeg")}
-                resizeMode="cover"
-                style={styles.image}
-              />
-            </View>
-            <View style={styles.mediaImageContainer}>
-              <Image
-                source={require("../../assets/image/media2.jpeg")}
-                resizeMode="cover"
-                style={styles.image}
-              />
-            </View>
-            <View
-              style={[styles.mediaImageContainer, { marginRight: SPACING * 2 }]}
-            >
-              <Image
-                source={require("../../assets/image/media3.jpeg")}
-                resizeMode="cover"
-                style={styles.image}
-              />
-            </View>
+            {dataAPIs.map((movie) =>
+              likeArray.map((like, index) =>
+                movie.id == like ? (
+                  <View key={index} style={styles.mediaImageContainer}>
+                    <Image
+                      source={{ uri: movie.backdrop }}
+                      resizeMode="cover"
+                      style={styles.image}
+                    />
+                  </View>
+                ) : null
+              )
+            )}
           </ScrollView>
         </View>
         <View style={styles.favoriteMoviesContainer}>
           <Text style={[styles.favoriteMoviesText]}>Favorite Movies</Text>
         </View>
+        {dataAPIs.map((movie) =>
+          likeArray.map((like, index) =>
+            movie.id == like ? (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Detail", {id: movie.id})}
+                key={index}
+                style={{
+                  marginHorizontal: SPACING * 2,
+                  borderRadius: SPACING,
+                  overflow: "hidden",
+                  marginBottom: SPACING * 2,
+                }}
+              >
+                <ImageBackground
+                  style={{
+                    width: "100%",
+                    height: 200,
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                  source={{
+                    uri: movie.backdrop,
+                  }}
+                >
+                  <View
+                    style={{
+                      backgroundColor: "red",
+                      width: "30%",
+                      height: "90%",
+                      marginHorizontal: SPACING,
+                      borderRadius: SPACING * 2,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "100%", height: "100%" }}
+                      source={{
+                        uri: movie.poster,
+                      }}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      width: "60%",
+                      height: "90%",
+                      justifyContent: "space-evenly",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "#FFFFFF",
+                        fontSize: SPACING * 2,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {movie.title}
+                    </Text>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "flex-end" }}
+                    >
+                      <AntDesign
+                        name="calendar"
+                        size={SPACING * 1.5}
+                        color="#FFF"
+                      />
+                      <Text
+                        style={{
+                          fontSize: SPACING,
+                          color: "#FFF",
+                          fontWeight: "600",
+                        }}
+                      >
+                        {" " +
+                          movie.released_on.slice(
+                            0,
+                            movie.released_on.indexOf("T")
+                          ) +
+                          " | "}
+                      </Text>
+                      <AntDesign
+                        name="clockcircleo"
+                        size={SPACING * 1.5}
+                        color="#FFF"
+                      />
+                      <Text
+                        style={{
+                          fontSize: SPACING,
+                          color: "#FFF",
+                          fontWeight: "600",
+                        }}
+                      >
+                        {" " + movie.length}
+                      </Text>
+                    </View>
+                  </View>
+                </ImageBackground>
+              </TouchableOpacity>
+            ) : null
+          )
+        )}
       </ScrollView>
     </SafeAreaView>
   )
@@ -239,8 +327,7 @@ const styles = StyleSheet.create({
     marginLeft: SPACING * 2,
   },
   favoriteMoviesContainer: {
-    marginHorizontal: SPACING * 2,
-    marginTop: SPACING * 2,
+    margin: SPACING * 2,
   },
   favoriteMoviesText: {
     fontSize: SPACING * 2.5,
