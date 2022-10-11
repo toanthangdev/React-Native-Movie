@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux"
 export default Profile = ({ navigation }) => {
   //const [dataAPIs, setDataAPIs] = useState([])
   const [likeArray, setLikedArray] = useState([])
+  const [name, setName] = useState("User")
   //const [data, setData] = useState([])
 
   const dispatch = useDispatch()
@@ -50,12 +51,19 @@ export default Profile = ({ navigation }) => {
   const getLiked = async () => {
     try {
       const value = await AsyncStorage.getItem("Liked")
+      const name = await AsyncStorage.getItem("Name")
       if (value == null) {
         setLikedArray([])
       }
       if (value != null) {
         const myArray = value.split(" ")
         setLikedArray(myArray)
+      }
+      if (name == null) {
+        setName("User")
+      }
+      if (name != null) {
+        setName(name)
       }
     } catch (e) {
       console.log(e)
@@ -73,7 +81,9 @@ export default Profile = ({ navigation }) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="ios-arrow-back" size={24} color="#52575D" />
           </TouchableOpacity>
-          <Ionicons name="ellipsis-vertical" size={24} color="#52575D" />
+          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
+            <Ionicons name="ellipsis-vertical" size={24} color="#52575D" />
+          </TouchableOpacity>
         </View>
         <View style={{ alignSelf: "center" }}>
           <View style={styles.profileImage}>
@@ -98,7 +108,7 @@ export default Profile = ({ navigation }) => {
         </View>
         <View style={styles.infoContainer}>
           <Text style={[styles.text, { fontWeight: "300", fontSize: 36 }]}>
-            Toàn Thắng
+            {name}
           </Text>
           <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>
             Software Engineering
