@@ -14,31 +14,38 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import AntDesign from "react-native-vector-icons/AntDesign"
 import SPACING from "../../assets/config/SPACING"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import API from "../../assets/config/APIs"
+//import API from "../../assets/config/APIs"
+import { getMovies } from "../redux/movieSlice"
+import { useDispatch, useSelector } from "react-redux"
 
 export default Profile = ({ navigation }) => {
-  const [dataAPIs, setDataAPIs] = useState([])
+  //const [dataAPIs, setDataAPIs] = useState([])
   const [likeArray, setLikedArray] = useState([])
-  const [data, setData] = useState([])
+  //const [data, setData] = useState([])
+
+  const dispatch = useDispatch()
+
+  const moviesData = useSelector((state) => state.movie.moviesData)
 
   useEffect(() => {
     const focusHandler = navigation.addListener("focus", () => {
-      getAPIs()
+      //getAPIs()
+      dispatch(getMovies())
       getLiked()
     })
     return focusHandler
-  }, [])
+  }, [navigation])
 
-  const getAPIs = () => {
-    API.defaults.headers.common["Authorization"] = "Bearer Wookie2019"
-    API.get("movies")
-      .then((res) => {
-        setDataAPIs(res.data.movies)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
+  // const getAPIs = () => {
+  //   API.defaults.headers.common["Authorization"] = "Bearer Wookie2019"
+  //   API.get("movies")
+  //     .then((res) => {
+  //       setDataAPIs(res.data.movies)
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //     })
+  // }
 
   const getLiked = async () => {
     try {
@@ -55,11 +62,17 @@ export default Profile = ({ navigation }) => {
     }
   }
 
+  if (!moviesData) {
+    return null
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.titleBar}>
-          <Ionicons name="ios-arrow-back" size={24} color="#52575D" />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="ios-arrow-back" size={24} color="#52575D" />
+          </TouchableOpacity>
           <Ionicons name="ellipsis-vertical" size={24} color="#52575D" />
         </View>
         <View style={{ alignSelf: "center" }}>
@@ -120,7 +133,7 @@ export default Profile = ({ navigation }) => {
         </View>
         <View style={{ marginTop: 32 }}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {dataAPIs.map((movie) =>
+            {moviesData.map((movie) =>
               likeArray.map((like, index) =>
                 movie.id == like ? (
                   <View key={index} style={styles.mediaImageContainer}>
@@ -138,7 +151,7 @@ export default Profile = ({ navigation }) => {
         <View style={styles.favoriteMoviesContainer}>
           <Text style={[styles.favoriteMoviesText]}>Favorite Movies</Text>
         </View>
-        {dataAPIs.map((movie) =>
+        {moviesData.map((movie) =>
           likeArray.map((like, index) =>
             movie.id == like ? (
               <TouchableOpacity
@@ -183,9 +196,7 @@ export default Profile = ({ navigation }) => {
                         size={SPACING * 1.5}
                         color="#FFF"
                       />
-                      <Text
-                        style={styles.textRelease}
-                      >
+                      <Text style={styles.textRelease}>
                         {" " + movie.length}
                       </Text>
                     </View>

@@ -9,25 +9,33 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native"
-import API from "../../assets/config/APIs"
 import SPACING from "../../assets/config/SPACING"
 import { AirbnbRating } from "react-native-ratings"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import AntDesign from "react-native-vector-icons/AntDesign"
+import { useDispatch, useSelector } from "react-redux"
+import { getMovies } from "../redux/movieSlice"
 
 const Detail = ({ route }) => {
-  const [dataAPIs, setDataAPIs] = useState([])
-  const [data, setData] = useState([])
-  const [cast, setCast] = useState([])
-  const [director, setDirector] = useState([])
-  const [rating, setRating] = useState(null)
+  //const [dataAPIs, setDataAPIs] = useState([])
+  //const [data, setData] = useState([])
+  //const [cast, setCast] = useState([])
+  //const [director, setDirector] = useState([])
+  //const [rating, setRating] = useState(null)
   const [liked, setLiked] = useState("")
-  const [yearReleased, setYearReleased] = useState("")
+  //const [yearReleased, setYearReleased] = useState("")
   const [likedArray, setLikedArray] = useState([])
 
+  const dispatch = useDispatch()
+
+  const moviesData = useSelector((state) => state.movie.moviesData)
+
+  const data = moviesData.filter((item) => item.id == route.params.id)[0]
+
   useEffect(() => {
-    getAPIs()
+    //getAPIs()
+    dispatch(getMovies)
     getLiked()
   }, [liked])
 
@@ -75,27 +83,27 @@ const Detail = ({ route }) => {
     }
   }
 
-  const getAPIs = () => {
-    API.defaults.headers.common["Authorization"] = "Bearer Wookie2019"
-    API.get("movies")
-      .then((res) => {
-        res.data.movies.forEach((item) => {
-          if (item.id === route.params.id) {
-            setData(item)
-            setRating(item.imdb_rating)
-            setYearReleased(
-              item.released_on.slice(0, item.released_on.indexOf("-"))
-            )
-            setCast(item.cast)
-            setDirector(item.director)
-          }
-        })
-        setDataAPIs(res.data.movies)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
+  // const getAPIs = () => {
+  //   API.defaults.headers.common["Authorization"] = "Bearer Wookie2019"
+  //   API.get("movies")
+  //     .then((res) => {
+  //       res.data.movies.forEach((item) => {
+  //         if (item.id === route.params.id) {
+  //           setData(item)
+  //           setRating(item.imdb_rating)
+  //           setYearReleased(
+  //             item.released_on.slice(0, item.released_on.indexOf("-"))
+  //           )
+  //           setCast(item.cast)
+  //           setDirector(item.director)
+  //         }
+  //       })
+  //       setDataAPIs(res.data.movies)
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //     })
+  // }
 
   if (!data) {
     return null
@@ -103,7 +111,10 @@ const Detail = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground style={styles.header} source={{ uri: data.backdrop }}>
+      <ImageBackground
+        style={styles.header}
+        source={{ uri: data.backdrop }}
+      >
         <View style={styles.headerData}>
           <View style={{ flexDirection: "row" }}>
             <Image style={styles.poster} source={{ uri: data.poster }} />
@@ -121,7 +132,7 @@ const Detail = ({ route }) => {
                 </TouchableOpacity>
                 <AirbnbRating
                   count={10}
-                  defaultRating={rating}
+                  defaultRating={data.imdb_rating}
                   size={SPACING * 1.3}
                   isDisabled={true}
                   reviews={[]}
@@ -141,12 +152,12 @@ const Detail = ({ route }) => {
             }}
           >
             <AntDesign name="calendar" size={SPACING * 2} />
-            <Text style={styles.textRelease}> {yearReleased} | </Text>
+            <Text style={styles.textRelease}> {data.released_on.slice(0, data.released_on.indexOf("-"))} | </Text>
             <AntDesign name="clockcircleo" size={SPACING * 2} />
             <Text style={styles.textRelease}> {data.length} |</Text>
             <AntDesign name="team" size={SPACING * 2} />
-            {typeof director !== "string" ? (
-              director.map((item, index) =>
+            {typeof data.director !== "string" ? (
+              data.director.map((item, index) =>
                 index == 0 ? (
                   <Text style={styles.textRelease} key={index}>
                     {" "}
@@ -159,12 +170,12 @@ const Detail = ({ route }) => {
                 )
               )
             ) : (
-              <Text style={styles.textRelease}> {director}</Text>
+              <Text style={styles.textRelease}> {data.director}</Text>
             )}
           </View>
           <View style={styles.castContainer}>
             <Text style={styles.castText}>Cast: </Text>
-            {cast.map((item, index) =>
+            {data.cast.map((item, index) =>
               index == 0 ? (
                 <Text key={index} style={styles.castText}>
                   {item}
@@ -186,6 +197,7 @@ const Detail = ({ route }) => {
       </View>
     </View>
   )
+
 }
 
 export default Detail
