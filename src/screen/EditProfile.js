@@ -6,18 +6,24 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  //TextInput,
+  Platform,
+  PermissionsAndroid,
 } from "react-native"
 import React, { useEffect, useState } from "react"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import SPACING from "../../assets/config/SPACING"
 import { TextInput, Button } from "react-native-paper"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { launchCamera, launchImageLibrary } from "react-native-image-picker"
+import Modal from "react-native-modal"
+import ImagePicker from "react-native-image-crop-picker"
 
 export default EditProfile = ({ navigation }) => {
   const [name, setName] = useState("User")
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
+  const [modalVisible, setModalVisible] = useState(false)
+  const [filePath, setFilePath] = useState({})
 
   useEffect(() => {
     getData()
@@ -74,34 +80,192 @@ export default EditProfile = ({ navigation }) => {
     }
   }
 
+  const requestCameraPermission = async () => {
+    if (Platform.OS == "android") {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          { title: "Camera Permission", message: "App needs camera permission" }
+        )
+        return granted == PermissionsAndroid.RESULTS.GRANTED
+      } catch (err) {
+        console.warn(err)
+        return false
+      }
+    } else return true
+  }
+
+  const requestExternalWritePermission = async () => {
+    if (Platform.OS == "android") {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: "External Storage Write Permission",
+            message: "App needs write permission",
+          }
+        )
+        return granted == PermissionsAndroid.RESULTS.GRANTED
+      } catch (err) {
+        console.warn(err)
+        alert("Write permission err", err)
+      }
+    } else return true
+  }
+
+  const captureImage = async (type) => {
+    let options = {
+      mediaType: type,
+      maxWidth: 200,
+      maxHeight: 200,
+      quality: 1,
+      videoQuality: "low",
+      durationLimit: 30,
+      savaToPhotos: true,
+    }
+    let isCameraPermitted = await requestCameraPermission()
+    let isStoragePermitted = await requestExternalWritePermission()
+    if (isCameraPermitted && isStoragePermitted) {
+      launchCamera(options, (res) => {
+        if (res.didCancel) {
+          console.log("User cancelled camera picker")
+          return
+        } else if (res.errorCode == "camera_unavailable") {
+          alert("Camera not available on device")
+          return
+        } else if (res.errorCode == "permission") {
+          alert("Permission not satisfied")
+          return
+        } else if (res.errorCode == "others") {
+          alert(res.errorMessage)
+          return
+        }
+        setFilePath(res)
+      })
+    }
+  }
+
+  const chooseFile = (type) => {
+    let options = {
+      mediaType: type,
+      maxWidth: 200,
+      maxHeight: 200,
+      quality: 1,
+    }
+    launchImageLibrary(options, (res) => {
+      setFilePath(res)
+    })
+  }
+
+  const takePhotoFromCamera = () => {
+    ImagePicker.openCamera({
+      width: 200,
+      height: 200,
+      cropping: true,
+    }).then((image) => {
+      console.log(image)
+    })
+  }
+
+  const choosePhotoFromLibrary = () => {
+    ImagePicker.openPicker({
+      width: 200,
+      height: 200,
+      cropping: true,
+    }).then((image) => {
+      console.log(image)
+    })
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      {console.log(name)}
-      {console.log(email)}
-      {console.log(phone)}
+      <Modal
+        isVisible={modalVisible}
+        style={{
+          //backgroundColor: "white",
+          margin: 0,
+        }}
+      >
+        <View
+          style={{
+            height: 250,
+            backgroundColor: "white",
+            bottom: 0,
+            position: "absolute",
+            width: "100%",
+            borderTopLeftRadius: SPACING * 2,
+            borderTopRightRadius: SPACING * 2,
+            padding: SPACING * 2,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              marginBottom: SPACING / 4,
+              fontSize: SPACING * 2.5,
+              fontWeight: "bold",
+            }}
+          >
+            Upload Photo
+          </Text>
+          <Text style={{ marginBottom: SPACING }}>
+            Choose Your Profile Picture
+          </Text>
+          <Button
+            style={{ width: "100%", marginBottom: SPACING }}
+            mode="contained"
+            color="blue"
+            onPress={() => captureImage('picture')}
+          >
+            Take photo
+          </Button>
+          <Button
+            style={{ width: "100%", marginBottom: SPACING }}
+            mode="contained"
+            color="blue"
+            onPress={() => chooseFile('picture')}
+          >
+            Choose from library
+          </Button>
+          <Button
+            style={{ width: "100%" }}
+            mode="contained"
+            color="blue"
+            onPress={() => setModalVisible(!modalVisible)}
+          >
+            Cancel
+          </Button>
+        </View>
+      </Modal>
       <ScrollView
         style={{ paddingHorizontal: SPACING * 2, paddingVertical: SPACING }}
       >
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="ios-arrow-back" size={24} color="#52575D" />
         </TouchableOpacity>
-        <View
-          style={{
-            borderRadius: 100,
-            overflow: "hidden",
-            width: 200,
-            height: 200,
-            alignSelf: "center",
-          }}
-        >
-          <Image
-            source={require("../../assets/image/avatar.png")}
-            style={{ width: "100%", height: "100%" }}
-          />
+        <View style={{ alignSelf: "center" }}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={require("../../assets/image/avatar.png")}
+              style={styles.image}
+            />
+          </View>
+          <TouchableOpacity
+            style={styles.add}
+            onPress={() => setModalVisible(!modalVisible)}
+          >
+            <Ionicons
+              name="ios-add"
+              size={30}
+              color="#DFD8C8"
+              style={{ marginTop: 3, marginLeft: 2 }}
+            />
+          </TouchableOpacity>
         </View>
-        <View style={{ marginVertical: SPACING * 2 }}>
+        <View style={{ marginTop: SPACING * 8 }}>
           <View style={{ marginBottom: SPACING * 2 }}>
-            <Text>NAME</Text>
+            <Text style={styles.text}>NAME</Text>
             <TextInput
               mode="outlined"
               placeholder={name}
@@ -110,7 +274,7 @@ export default EditProfile = ({ navigation }) => {
             />
           </View>
           <View style={{ marginBottom: SPACING * 2 }}>
-            <Text>EMAIL</Text>
+            <Text style={styles.text}>EMAIL</Text>
             <TextInput
               multiline
               mode="outlined"
@@ -119,7 +283,7 @@ export default EditProfile = ({ navigation }) => {
             />
           </View>
           <View style={{ marginBottom: SPACING * 2 }}>
-            <Text>PHONE</Text>
+            <Text style={styles.text}>PHONE</Text>
             <TextInput
               mode="outlined"
               onChangeText={(text) => setPhone(text)}
@@ -138,5 +302,52 @@ export default EditProfile = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  imageContainer: {
+    borderRadius: 100,
+    overflow: "hidden",
+    width: 200,
+    height: 200,
+    alignSelf: "center",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "center",
+  },
+  text: {
+    fontSize: SPACING * 1.5,
+    fontWeight: "bold",
+  },
+  add: {
+    backgroundColor: "#41444B",
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    width: 40,
+    height: 40,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  header: {
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#333333",
+    shadowOffset: { width: -1, height: -3 },
+    shadowRadius: 2,
+    shadowOpacity: 0.4,
+    paddingTop: SPACING * 2,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  panelHeader: {
+    alignItems: "center",
+  },
+  panelHandle: {
+    width: 40,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#00000040",
+    marginBottom: 10,
   },
 })

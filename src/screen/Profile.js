@@ -14,7 +14,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import AntDesign from "react-native-vector-icons/AntDesign"
 import SPACING from "../../assets/config/SPACING"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-//import API from "../../assets/config/APIs"
 import { getMovies } from "../redux/movieSlice"
 import { useDispatch, useSelector } from "react-redux"
 
@@ -22,6 +21,7 @@ export default Profile = ({ navigation }) => {
   //const [dataAPIs, setDataAPIs] = useState([])
   const [likeArray, setLikedArray] = useState([])
   const [name, setName] = useState("User")
+  const [filePath, setFilePath] = useState({})
   //const [data, setData] = useState([])
 
   const dispatch = useDispatch()
@@ -97,14 +97,6 @@ export default Profile = ({ navigation }) => {
             <MaterialCommunityIcons name="chat" size={18} color="#DFD8C8" />
           </View>
           <View style={styles.active}></View>
-          <View style={styles.add}>
-            <Ionicons
-              name="ios-add"
-              size={30}
-              color="#DFD8C8"
-              style={{ marginTop: 3, marginLeft: 2 }}
-            />
-          </View>
         </View>
         <View style={styles.infoContainer}>
           <Text style={[styles.text, { fontWeight: "300", fontSize: 36 }]}>
