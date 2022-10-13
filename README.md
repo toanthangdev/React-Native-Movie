@@ -26,5 +26,10 @@ Get data from library Axios, use Redux Toolkit, React Hook and Async Store
 
 5. Edit Profile Screen
 
-<img src="https://user-images.githubusercontent.com/36125196/195070029-2780616f-5353-430e-b48b-476a3d83538f.png" width="250" alt="Profile Screen" />
+<img src="https://user-images.githubusercontent.com/36125196/195484438-36b29eb6-bb86-4676-8f1f-fa71cfa28119.png" width="250" alt="Profile Screen" />
 
+6. Choose Picture Avatar
+<img src="https://user-images.githubusercontent.com/36125196/195484660-de123e13-6947-489b-9e39-792bbd29fa0c.png" width="250" alt="Profile Screen" />
+
+7. Permission
+<img src="https://user-images.githubusercontent.com/36125196/195484989-892de297-6531-4149-a6be-4d9e524d9ffc.png" width="250" alt="Profile Screen" />
