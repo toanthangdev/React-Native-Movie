@@ -12,31 +12,38 @@ import SPACING from "../../assets/config/SPACING"
 import API from "../../assets/config/APIs"
 import { Searchbar } from "react-native-paper"
 import { AirbnbRating } from "react-native-ratings"
+import { getMovies } from "../redux/movieSlice"
+import { useDispatch, useSelector } from "react-redux"
 
 const Search = ({ navigation }) => {
   const [filterData, setFilterData] = useState([])
   const [data, setData] = useState([])
   const [search, setSearch] = useState("")
 
+  const dispatch = useDispatch()
+
+  const moviesData = useSelector((state) => state.movie.moviesData)
+
   useEffect(() => {
-    getAPIs()
+    //getAPIs()
+    dispatch(getMovies())
   }, [])
 
-  const getAPIs = () => {
-    API.defaults.headers.common["Authorization"] = "Bearer Wookie2019"
-    API.get("movies")
-      .then((res) => {
-        setFilterData(res.data.movies)
-        setData(res.data.movies)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
+  // const getAPIs = () => {
+  //   API.defaults.headers.common["Authorization"] = "Bearer Wookie2019"
+  //   API.get("movies")
+  //     .then((res) => {
+  //       setFilterData(res.data.movies)
+  //       setData(res.data.movies)
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //     })
+  // }
 
   const searchFilter = (text) => {
     if (text) {
-      const newData = data.filter((item) => {
+      const newData = moviesData.filter((item) => {
         const itemData = item.title
           ? item.title.toUpperCase()
           : "".toUpperCase()
@@ -46,7 +53,7 @@ const Search = ({ navigation }) => {
       setFilterData(newData)
       setSearch(text)
     } else {
-      setFilterData(data)
+      setFilterData(moviesData)
       setSearch(text)
     }
   }
@@ -60,7 +67,9 @@ const Search = ({ navigation }) => {
         <View style={{ flexDirection: "row" }}>
           <Image style={styles.imageCard} source={{ uri: item.poster }} />
           <View style={styles.textContainer}>
-            <Text style={styles.textTitle}>{item.title}</Text>
+            <Text numberOfLines={1} style={styles.textTitle}>
+              {item.title}
+            </Text>
             <AirbnbRating
               count={10}
               defaultRating={item.imdb_rating}
@@ -90,7 +99,7 @@ const Search = ({ navigation }) => {
       <View style={styles.body}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={filterData}
+          data={search == "" ? moviesData : filterData}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <Movie item={item} />}
         />

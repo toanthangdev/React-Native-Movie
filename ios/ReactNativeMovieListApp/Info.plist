@@ -45,6 +45,8 @@
 	<string>$(PRODUCT_NAME) requires to access Audio recording to record and uplod videos</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to upload photos from your photo gallery</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

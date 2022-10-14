@@ -23,7 +23,7 @@ export default EditProfile = ({ navigation }) => {
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
   const [modalVisible, setModalVisible] = useState(false)
-  const [filePath, setFilePath] = useState({})
+  // const [image, setImage] = useState('');
 
   useEffect(() => {
     getData()
@@ -172,9 +172,13 @@ export default EditProfile = ({ navigation }) => {
       width: 200,
       height: 200,
       cropping: true,
-    }).then((image) => {
-      console.log(image)
     })
+      .then((image) => {
+        console.log(image)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
   }
 
   return (
@@ -216,7 +220,7 @@ export default EditProfile = ({ navigation }) => {
             style={{ width: "100%", marginBottom: SPACING }}
             mode="contained"
             color="blue"
-            onPress={() => captureImage('picture')}
+            onPress={() => captureImage("picture")}
           >
             Take photo
           </Button>
@@ -224,7 +228,8 @@ export default EditProfile = ({ navigation }) => {
             style={{ width: "100%", marginBottom: SPACING }}
             mode="contained"
             color="blue"
-            onPress={() => chooseFile('picture')}
+            // onPress={() => chooseFile('picture')}
+            onPress={() => choosePhotoFromLibrary()}
           >
             Choose from library
           </Button>

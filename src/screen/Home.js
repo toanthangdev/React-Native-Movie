@@ -41,7 +41,6 @@ const Home = ({ navigation }) => {
   if (!moviesData) {
     return null
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -103,9 +102,10 @@ const styles = StyleSheet.create({
     marginVertical: SPACING,
   },
   imageGenre: {
-    width: SPACING * 15,
+    width: SPACING * 20,
     height: SPACING * 30,
     marginRight: SPACING,
+    resizeMode: 'cover',
     borderRadius: SPACING * 1.5,
   },
 })
