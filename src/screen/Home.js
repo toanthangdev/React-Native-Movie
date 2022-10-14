@@ -7,18 +7,22 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from "react-native"
 import SPACING from "../../assets/config/SPACING"
 import API from "../../assets/config/APIs"
 import { useDispatch, useSelector } from "react-redux"
-import movieSlice from "../redux/movieSlice"
 import { getMovies } from "../redux/movieSlice"
+import Carousel from "react-native-snap-carousel"
 
 const Home = ({ navigation }) => {
   const dispatch = useDispatch()
 
   const moviesData = useSelector((state) => state.movie.moviesData)
   const genresData = useSelector((state) => state.movie.genresData)
+  const filterData = useSelector((state) => state.movie.filterData)
+
+  const windowWidth = Dimensions.get("screen").width
 
   useEffect(() => {
     //getAPIs()
@@ -38,7 +42,17 @@ const Home = ({ navigation }) => {
   //       })
   //   }
 
-  if (!moviesData) {
+  const renderItem = (item) => {
+    return (
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Detail", { id: item.id })}
+      >
+        <Image style={styles.imageGenre} source={{ uri: item.poster }} />
+      </TouchableOpacity>
+    )
+  }
+
+  if (!filterData) {
     return null
   }
   return (
@@ -49,26 +63,32 @@ const Home = ({ navigation }) => {
       </View>
       <View style={styles.body}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {genresData.map((genre, index) => (
+          {filterData.map((data, index) => (
             <View key={index}>
-              <Text style={styles.textGenre}>{genre}</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {moviesData.map((item, index) => (
+              <Text style={styles.textGenre}>{data.genre}</Text>
+              {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {data.movies.map((item, index) => (
                   <TouchableOpacity
                     key={index}
                     onPress={() =>
                       navigation.navigate("Detail", { id: item.id })
                     }
                   >
-                    {item.genres.includes(genre) ? (
-                      <Image
-                        style={styles.imageGenre}
-                        source={{ uri: item.poster }}
-                      />
-                    ) : null}
+                    <Image
+                      style={styles.imageGenre}
+                      source={{ uri: item.poster }}
+                    />
                   </TouchableOpacity>
                 ))}
-              </ScrollView>
+              </ScrollView> */}
+              <Carousel
+                data={data.movies}
+                sliderWidth={windowWidth - SPACING * 4}
+                itemWidth={SPACING * 20}
+                itemHeight={SPACING * 30}
+                renderItem={({ item }) => renderItem(item)}
+                loop={true}
+              />
             </View>
           ))}
         </ScrollView>
@@ -105,7 +125,7 @@ const styles = StyleSheet.create({
     width: SPACING * 20,
     height: SPACING * 30,
     marginRight: SPACING,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     borderRadius: SPACING * 1.5,
   },
 })

@@ -12,12 +12,14 @@ export const getMovies = createAsyncThunk("movie/getData", async () => {
 })
 
 const genres = []
+const filterDataTemp = []
 
 const movieSlice = createSlice({
   name: "movie",
   initialState: {
     moviesData: [],
     genresData: [],
+    filterData: [],
     isSuccess: false,
     message: "",
     loading: false,
@@ -32,6 +34,8 @@ const movieSlice = createSlice({
       state.moviesData = action.payload
       getGenres(action.payload)
       state.genresData = genres
+      getFilterData(action.payload, genres)
+      state.filterData = filterDataTemp
       state.isSuccess = true
     },
     [getMovies.rejected]: (state, action) => {
@@ -49,6 +53,17 @@ const getGenres = (data) => {
         genres.push(genre)
       }
       genres.sort()
+    })
+  })
+}
+
+const getFilterData = (data, genres) => {
+  genres.forEach((genre, index) => {
+    filterDataTemp.push({ genre: genre, movies: [] })
+    data.forEach((item) => {
+      if (item.genres.includes(genre)) {
+        filterDataTemp[index].movies.push(item)
+      }
     })
   })
 }
