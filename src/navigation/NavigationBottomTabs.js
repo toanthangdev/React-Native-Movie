@@ -5,13 +5,11 @@ import ProfileStack from "./navigationStack/ProfileStack"
 import { NavigationContainer } from "@react-navigation/native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
-import { TextBase } from "react-native"
 
 const Tab = createBottomTabNavigator()
 
 const NavigationBottomTabs = () => {
   return (
-    <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: false,
@@ -45,7 +43,6 @@ const NavigationBottomTabs = () => {
           component={ProfileStack}
         />
       </Tab.Navigator>
-    </NavigationContainer>
   )
 }
 

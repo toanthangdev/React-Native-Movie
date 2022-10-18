@@ -7,7 +7,7 @@ similarity index 100%
 rename from node_modules/react-native/ReactCommon/hermes/inspector/tools/msggen/.npmignore
 rename to node_modules/react-native/ReactCommon/hermes/inspector/tools/msggen/.gitignore
 diff --git a/node_modules/react-native/index.js b/node_modules/react-native/index.js
-index d59ba34..bf5431a 100644
+index d59ba34..72a93a4 100644
 --- a/node_modules/react-native/index.js
 +++ b/node_modules/react-native/index.js
 @@ -435,32 +435,36 @@ module.exports = {
@@ -24,7 +24,7 @@ index d59ba34..bf5431a 100644
 +    //   'ColorPropType has been removed from React Native. Migrate to ' +
 +    //     "ColorPropType exported from 'deprecated-react-native-prop-types'.",
 +    // );
-+    return require('deprecated-react-native-prop-types').ColorPropType
++    return require('deprecated-react-native-prop-types').ColorPropType;
    },
    get EdgeInsetsPropType(): $FlowFixMe {
 -    invariant(
@@ -37,7 +37,7 @@ index d59ba34..bf5431a 100644
 +    //   'EdgeInsetsPropType has been removed from React Native. Migrate to ' +
 +    //     "EdgeInsetsPropType exported from 'deprecated-react-native-prop-types'.",
 +    // );
-+    return require('deprecated-react-native-prop-types').EdgeInsetsPropType
++    return require('deprecated-react-native-prop-types').EdgeInsetsPropType;
    },
    get PointPropType(): $FlowFixMe {
 -    invariant(
@@ -50,7 +50,7 @@ index d59ba34..bf5431a 100644
 +    //   'PointPropType has been removed from React Native. Migrate to ' +
 +    //     "PointPropType exported from 'deprecated-react-native-prop-types'.",
 +    // );
-+    return require('deprecated-react-native-prop-types').PointPropType
++    return require('deprecated-react-native-prop-types').PointPropType;
    },
    get ViewPropTypes(): $FlowFixMe {
 -    invariant(
@@ -63,7 +63,7 @@ index d59ba34..bf5431a 100644
 +    //   'ViewPropTypes has been removed from React Native. Migrate to ' +
 +    //     "ViewPropTypes exported from 'deprecated-react-native-prop-types'.",
 +    // );
-+    return require('deprecated-react-native-prop-types').ViewPropTypes
++    return require('deprecated-react-native-prop-types').ViewPropTypes;
    },
  };
  
