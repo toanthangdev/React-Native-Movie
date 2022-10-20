@@ -14,8 +14,10 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import AntDesign from "react-native-vector-icons/AntDesign"
 import SPACING from "../../assets/config/SPACING"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { Text as TextPaper } from "react-native-paper"
 import { getMovies } from "../redux/movieSlice"
 import { useDispatch, useSelector } from "react-redux"
+import { Button } from "react-native-paper"
 
 export default Profile = ({ navigation }) => {
   //const [dataAPIs, setDataAPIs] = useState([])
@@ -82,7 +84,11 @@ export default Profile = ({ navigation }) => {
             <Ionicons name="ios-arrow-back" size={24} color="#52575D" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
-            <Ionicons name="ellipsis-vertical" size={24} color="#52575D" />
+            <MaterialCommunityIcons
+              name="account-edit"
+              size={24}
+              color="#52575D"
+            />
           </TouchableOpacity>
         </View>
         <View style={{ alignSelf: "center" }}>
@@ -99,21 +105,21 @@ export default Profile = ({ navigation }) => {
           <View style={styles.active}></View>
         </View>
         <View style={styles.infoContainer}>
-          <Text style={[styles.text, { fontWeight: "300", fontSize: 36 }]}>
+          <TextPaper style={[styles.text, { fontWeight: "300", fontSize: 36 }]}>
             {name}
-          </Text>
-          <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>
+          </TextPaper>
+          <TextPaper style={[styles.text, { fontSize: 14 }]}>
             Software Engineering
-          </Text>
+          </TextPaper>
         </View>
         <View style={styles.statsContainer}>
           <View style={styles.statsBox}>
-            <Text style={[styles.text, { fontSize: 24 }]}>
+            <TextPaper style={[styles.text, { fontSize: 24 }]}>
               {likeArray.length}
-            </Text>
-            <Text style={[styles.text, styles.subText]}>
+            </TextPaper>
+            <TextPaper style={[styles.text, styles.subText]}>
               {likeArray.length == 1 ? "Movie" : "Movies"}
-            </Text>
+            </TextPaper>
           </View>
           <View
             style={[
@@ -125,12 +131,16 @@ export default Profile = ({ navigation }) => {
               },
             ]}
           >
-            <Text style={[styles.text, { fontSize: 24 }]}>1000</Text>
-            <Text style={[styles.text, styles.subText]}>Follower</Text>
+            <TextPaper style={[styles.text, { fontSize: 24 }]}>1000</TextPaper>
+            <TextPaper style={[styles.text, styles.subText]}>
+              Follower
+            </TextPaper>
           </View>
           <View style={styles.statsBox}>
-            <Text style={[styles.text, { fontSize: 24 }]}>10000</Text>
-            <Text style={[styles.text, styles.subText]}>Following</Text>
+            <TextPaper style={[styles.text, { fontSize: 24 }]}>10000</TextPaper>
+            <TextPaper style={[styles.text, styles.subText]}>
+              Following
+            </TextPaper>
           </View>
         </View>
         <View style={{ marginTop: 32 }}>
@@ -151,7 +161,9 @@ export default Profile = ({ navigation }) => {
           </ScrollView>
         </View>
         <View style={styles.favoriteMoviesContainer}>
-          <Text style={[styles.favoriteMoviesText]}>Favorite Movies</Text>
+          <TextPaper style={[styles.favoriteMoviesText]}>
+            Favorite Movies
+          </TextPaper>
         </View>
         {moviesData.map((movie) =>
           likeArray.map((like, index) =>
@@ -216,14 +228,10 @@ export default Profile = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
   },
-  text: {
-    color: "#52575D",
-  },
+  text: {},
   subText: {
     fontSize: 12,
-    color: "#AEB5BC",
     textTransform: "uppercase",
     fontWeight: "500",
   },

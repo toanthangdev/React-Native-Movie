@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import API from "../../assets/config/APIs"
 
-export const getMovies = createAsyncThunk("movie/getData", async () => {
+export const getMovies = createAsyncThunk("movie/getDataMovies", async () => {
   try {
     API.defaults.headers.common["Authorization"] = "Bearer Wookie2019"
     const { data } = await API.get("movies")
@@ -10,9 +10,8 @@ export const getMovies = createAsyncThunk("movie/getData", async () => {
     console.log(error)
   }
 })
-
-const genres = []
-const filterDataTemp = []
+let genres = []
+let filterDataTemp = []
 
 const movieSlice = createSlice({
   name: "movie",
@@ -34,7 +33,6 @@ const movieSlice = createSlice({
       state.moviesData = action.payload
       getGenres(action.payload)
       state.genresData = genres
-      getFilterData(action.payload, genres)
       state.filterData = filterDataTemp
       state.isSuccess = true
     },
@@ -52,12 +50,8 @@ const getGenres = (data) => {
       if (!genres.includes(genre)) {
         genres.push(genre)
       }
-      genres.sort()
     })
   })
-}
-
-const getFilterData = (data, genres) => {
   genres.forEach((genre, index) => {
     filterDataTemp.push({ genre: genre, movies: [] })
     data.forEach((item) => {

@@ -14,6 +14,7 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 import SPACING from "../../assets/config/SPACING"
 import { TextInput, Button } from "react-native-paper"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import {Text as TextPaper, Modal as ModalPaper} from 'react-native-paper'
 import { launchCamera, launchImageLibrary } from "react-native-image-picker"
 import Modal from "react-native-modal"
 import ImagePicker from "react-native-image-crop-picker"
@@ -270,7 +271,7 @@ export default EditProfile = ({ navigation }) => {
         </View>
         <View style={{ marginTop: SPACING * 8 }}>
           <View style={{ marginBottom: SPACING * 2 }}>
-            <Text style={styles.text}>NAME</Text>
+            <TextPaper style={styles.text}>NAME</TextPaper>
             <TextInput
               mode="outlined"
               placeholder={name}
@@ -279,7 +280,7 @@ export default EditProfile = ({ navigation }) => {
             />
           </View>
           <View style={{ marginBottom: SPACING * 2 }}>
-            <Text style={styles.text}>EMAIL</Text>
+            <TextPaper style={styles.text}>EMAIL</TextPaper>
             <TextInput
               multiline
               mode="outlined"
@@ -288,7 +289,7 @@ export default EditProfile = ({ navigation }) => {
             />
           </View>
           <View style={{ marginBottom: SPACING * 2 }}>
-            <Text style={styles.text}>PHONE</Text>
+            <TextPaper style={styles.text}>PHONE</TextPaper>
             <TextInput
               mode="outlined"
               onChangeText={(text) => setPhone(text)}

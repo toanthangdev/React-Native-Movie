@@ -13,7 +13,8 @@ import SPACING from "../../assets/config/SPACING"
 import API from "../../assets/config/APIs"
 import { useDispatch, useSelector } from "react-redux"
 import { getMovies } from "../redux/movieSlice"
-import Carousel from "react-native-snap-carousel"
+//import Carousel from "react-native-snap-carousel"
+import {Text as TextPaper} from 'react-native-paper'
 
 const Home = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -58,15 +59,15 @@ const Home = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.textHeader}>WOOKIE</Text>
-        <Text style={styles.textHeader}>MOVIES</Text>
+        <TextPaper style={styles.textHeader}>WOOKIE</TextPaper>
+        <TextPaper style={styles.textHeader}>MOVIES</TextPaper>
       </View>
       <View style={styles.body}>
         <ScrollView showsVerticalScrollIndicator={false}>
           {filterData.map((data, index) => (
             <View key={index}>
-              <Text style={styles.textGenre}>{data.genre}</Text>
-              {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <TextPaper style={styles.textGenre}>{data.genre}</TextPaper>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {data.movies.map((item, index) => (
                   <TouchableOpacity
                     key={index}
@@ -80,15 +81,15 @@ const Home = ({ navigation }) => {
                     />
                   </TouchableOpacity>
                 ))}
-              </ScrollView> */}
-              <Carousel
+              </ScrollView>
+              {/* <Carousel
                 data={data.movies}
                 sliderWidth={windowWidth - SPACING * 4}
                 itemWidth={SPACING * 20}
                 itemHeight={SPACING * 30}
                 renderItem={({ item }) => renderItem(item)}
                 loop={true}
-              />
+              /> */}
             </View>
           ))}
         </ScrollView>
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
   },
   textHeader: {
     fontSize: SPACING * 4,
-    fontWeight: "400",
+    fontWeight: 'bold'
   },
   body: {
     flex: 5,

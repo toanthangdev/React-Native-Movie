@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import AntDesign from "react-native-vector-icons/AntDesign"
 import { useDispatch, useSelector } from "react-redux"
 import { getMovies } from "../redux/movieSlice"
+import {Text as TextPaper} from 'react-native-paper'
 
 const Detail = ({ route }) => {
   //const [dataAPIs, setDataAPIs] = useState([])
@@ -119,7 +120,7 @@ const Detail = ({ route }) => {
           <View style={{ flexDirection: "row" }}>
             <Image style={styles.poster} source={{ uri: data.poster }} />
             <View style={styles.headerText}>
-              <Text style={styles.title}>{data.title}</Text>
+              <TextPaper style={styles.title}>{data.title}</TextPaper>
               <View>
                 <TouchableOpacity onPress={() => onLike(data.id)}>
                   <FontAwesome
@@ -151,39 +152,39 @@ const Detail = ({ route }) => {
               flexWrap: "wrap",
             }}
           >
-            <AntDesign name="calendar" size={SPACING * 2} />
-            <Text style={styles.textRelease}> {data.released_on.slice(0, data.released_on.indexOf("-"))} | </Text>
-            <AntDesign name="clockcircleo" size={SPACING * 2} />
-            <Text style={styles.textRelease}> {data.length} |</Text>
-            <AntDesign name="team" size={SPACING * 2} />
+            <AntDesign name="calendar" size={SPACING * 2} color='#52575D' />
+            <TextPaper style={styles.textRelease}> {data.released_on.slice(0, data.released_on.indexOf("-"))} | </TextPaper>
+            <AntDesign name="clockcircleo" size={SPACING * 2} color='#52575D' />
+            <TextPaper style={styles.textRelease}> {data.length} |</TextPaper>
+            <AntDesign name="team" size={SPACING * 2} color='#52575D' />
             {typeof data.director !== "string" ? (
               data.director.map((item, index) =>
                 index == 0 ? (
-                  <Text style={styles.textRelease} key={index}>
+                  <TextPaper style={styles.textRelease} key={index}>
                     {" "}
                     {item}
-                  </Text>
+                  </TextPaper>
                 ) : (
-                  <Text style={styles.textRelease} key={index}>
+                  <TextPaper style={styles.textRelease} key={index}>
                     , {item}
-                  </Text>
+                  </TextPaper>
                 )
               )
             ) : (
-              <Text style={styles.textRelease}> {data.director}</Text>
+              <TextPaper style={styles.textRelease}> {data.director}</TextPaper>
             )}
           </View>
           <View style={styles.castContainer}>
-            <Text style={styles.castText}>Cast: </Text>
+            <TextPaper style={styles.castText}>Cast: </TextPaper>
             {data.cast.map((item, index) =>
               index == 0 ? (
-                <Text key={index} style={styles.castText}>
+                <TextPaper key={index} style={styles.castText}>
                   {item}
-                </Text>
+                </TextPaper>
               ) : (
-                <Text key={index} style={styles.castText}>
+                <TextPaper key={index} style={styles.castText}>
                   , {item}
-                </Text>
+                </TextPaper>
               )
             )}
           </View>
@@ -191,7 +192,7 @@ const Detail = ({ route }) => {
             style={styles.overviewContainer}
             showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.textOverview}>{data.overview}</Text>
+            <TextPaper style={styles.textOverview}>{data.overview}</TextPaper>
           </ScrollView>
         </View>
       </View>

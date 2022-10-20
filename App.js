@@ -1,4 +1,4 @@
-import "react-native-gesture-handler"
+//import "react-native-gesture-handler"
 import React from "react"
 import NavigationBottomTabs from "./src/navigation/NavigationBottomTabs"
 import NavigationDrawer from "./src/navigation/NavigationDrawer"

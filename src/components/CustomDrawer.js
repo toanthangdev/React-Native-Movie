@@ -10,20 +10,33 @@ import React, { useState, useEffect } from "react"
 import {
   DrawerContentScrollView,
   DrawerItemList,
+  DrawerItem,
 } from "@react-navigation/drawer"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-
-import Ionicons from "react-native-vector-icons/Ionicons"
+import {
+  Drawer,
+  Avatar,
+  Title,
+  TouchableRipple,
+  Switch,
+  useTheme,
+  RadioButton,
+} from "react-native-paper"
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
 export default CustomDrawer = (props) => {
   const [name, setName] = useState("User")
+  const [value, setValue] = useState("en")
+  const [isDarkTheme, setIsDarkTheme] = useState(null)
 
-  useEffect(() => {
-    getLiked()
-  }, [])
-
-  const getLiked = async () => {
+  const getAsyncData = async () => {
     try {
+      const isDarkTheme = await AsyncStorage.getItem("isDarkTheme")
+      if (isDarkTheme == null) {
+        setIsDarkTheme(false)
+      } else {
+        setIsDarkTheme(isDarkTheme === "true" ? true : false)
+      }
       const name = await AsyncStorage.getItem("Name")
       if (name == null) {
         setName("User")
@@ -36,40 +49,99 @@ export default CustomDrawer = (props) => {
     }
   }
 
+  const toggleTheme = async () => {
+    try {
+      await AsyncStorage.setItem(
+        "isDarkTheme",
+        isDarkTheme === true ? "false" : "true"
+      )
+      setIsDarkTheme(!isDarkTheme)
+      props.parentCallback(!isDarkTheme)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  // const sendData = () => {
+  //   props.parentCallback(isDarkTheme)
+  // }
+
+  useEffect(() => {
+    getAsyncData()
+  }, [isDarkTheme])
+
+  const paperTheme = useTheme()
+
   return (
     <View style={{ flex: 1 }}>
-      <DrawerContentScrollView
-        {...props}
-        contentContainerStyle={{ backgroundColor: "#FFF" }}
-      >
-        <ImageBackground
-          source={require("../../assets/image/bg.jpeg")}
-          style={{ padding: 20 }}
+      <DrawerContentScrollView {...props}>
+        <View
+          style={{
+            padding: 20,
+            borderBottomWidth: 1,
+            borderBottomColor: "#CCC",
+          }}
         >
-          <Image
+          <Avatar.Image
             source={require("../../assets/image/avatar.png")}
-            style={{
-              height: 80,
-              width: 80,
-              borderRadius: 40,
-              marginBottom: 10,
-            }}
+            size={70}
           />
-          <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600" }}>
-            {name}
-          </Text>
-        </ImageBackground>
-        <View style={{ backgroundColor: "#FFFFFF", paddingTop: 10 }}>
+          <Title style={{ fontSize: 20, fontWeight: "bold" }}>{name}</Title>
+        </View>
+        <View style={{ paddingTop: 10 }}>
           <DrawerItemList {...props} />
         </View>
-      </DrawerContentScrollView>
-      <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: "#CCC" }}>
-        <TouchableOpacity style={{ paddingVertical: 15 }} onPress={() => {}}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Ionicons name="exit-outline" size={22} />
-            <Text>Sign Out</Text>
+        <View
+          style={{ padding: 20, flexDirection: "row", alignItems: "center" }}
+        >
+          <Title style={{ fontSize: 16 }}>Dark Theme</Title>
+          <View style={{ marginLeft: 20 }}>
+            <Switch
+              value={isDarkTheme}
+              color="#05307e"
+              onValueChange={toggleTheme}
+            />
           </View>
-        </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            padding: 20,
+            flexDirection: "row",
+            alignItems: "flex-start",
+          }}
+        >
+          <Title style={{ fontSize: 16, marginRight: 30 }}>Language</Title>
+          <RadioButton.Group
+            onValueChange={(newValue) => setValue(newValue)}
+            value={value}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <Title style={{ fontSize: 14, marginRight: 10 }}>English</Title>
+              <RadioButton value="en" />
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <Title style={{ fontSize: 14, marginRight: 10 }}>
+                Vietnamese
+              </Title>
+              <RadioButton value="vn" />
+            </View>
+          </RadioButton.Group>
+        </View>
+      </DrawerContentScrollView>
+      <View
+        style={{
+          paddingVertical: 20,
+          borderTopWidth: 1,
+          borderTopColor: "#CCC",
+        }}
+      >
+        <DrawerItem
+          icon={({ color, size }) => (
+            <Icon name="exit-to-app" color={color} size={size} />
+          )}
+          label="Sign Out"
+          onPress={() => {}}
+        />
       </View>
     </View>
   )

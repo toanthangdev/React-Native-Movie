@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import SPACING from "../../assets/config/SPACING"
 import API from "../../assets/config/APIs"
 import { Searchbar } from "react-native-paper"
 import { AirbnbRating } from "react-native-ratings"
+import { Text as TextPaper } from "react-native-paper"
 import { getMovies } from "../redux/movieSlice"
 import { useDispatch, useSelector } from "react-redux"
 
@@ -25,7 +26,6 @@ const Search = ({ navigation }) => {
   const moviesData = useSelector((state) => state.movie.moviesData)
 
   useEffect(() => {
-    //getAPIs()
     dispatch(getMovies())
   }, [])
 
@@ -67,9 +67,9 @@ const Search = ({ navigation }) => {
         <View style={{ flexDirection: "row" }}>
           <Image style={styles.imageCard} source={{ uri: item.poster }} />
           <View style={styles.textContainer}>
-            <Text numberOfLines={1} style={styles.textTitle}>
+            <TextPaper numberOfLines={1} style={styles.textTitle}>
               {item.title}
-            </Text>
+            </TextPaper>
             <AirbnbRating
               count={10}
               defaultRating={item.imdb_rating}
@@ -80,18 +80,24 @@ const Search = ({ navigation }) => {
           </View>
         </View>
         <View>
-          <Text style={styles.textClassification}>{item.classification}</Text>
+          <TextPaper style={styles.textClassification}>
+            {item.classification}
+          </TextPaper>
         </View>
       </TouchableOpacity>
     )
   }
 
+  if (!moviesData) {
+    return null
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.textHeader}>LIST MOVIES</Text>
+        <TextPaper style={styles.textHeader}>LIST MOVIES</TextPaper>
         <Searchbar
-          placeholder="Search..."
+          placeholder="Search"
           value={search}
           onChangeText={(text) => searchFilter(text)}
         />
@@ -100,6 +106,7 @@ const Search = ({ navigation }) => {
         <FlatList
           showsVerticalScrollIndicator={false}
           data={search == "" ? moviesData : filterData}
+          initialNumToRender={10}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <Movie item={item} />}
         />
@@ -118,6 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingHorizontal: SPACING * 2,
+    width: "100%",
   },
   textHeader: {
     fontSize: SPACING * 3,
