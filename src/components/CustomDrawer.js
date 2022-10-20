@@ -1,11 +1,4 @@
-import {
-  ImageBackground,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-} from "react-native"
+import { StyleSheet, View } from "react-native"
 import React, { useState, useEffect } from "react"
 import {
   DrawerContentScrollView,
@@ -13,15 +6,7 @@ import {
   DrawerItem,
 } from "@react-navigation/drawer"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import {
-  Drawer,
-  Avatar,
-  Title,
-  TouchableRipple,
-  Switch,
-  useTheme,
-  RadioButton,
-} from "react-native-paper"
+import { Avatar, Title, Switch, RadioButton } from "react-native-paper"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
 export default CustomDrawer = (props) => {
@@ -62,38 +47,24 @@ export default CustomDrawer = (props) => {
     }
   }
 
-  // const sendData = () => {
-  //   props.parentCallback(isDarkTheme)
-  // }
-
   useEffect(() => {
     getAsyncData()
   }, [isDarkTheme])
 
-  const paperTheme = useTheme()
-
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
-        <View
-          style={{
-            padding: 20,
-            borderBottomWidth: 1,
-            borderBottomColor: "#CCC",
-          }}
-        >
+        <View style={styles.avatarContainer}>
           <Avatar.Image
             source={require("../../assets/image/avatar.png")}
             size={70}
           />
-          <Title style={{ fontSize: 20, fontWeight: "bold" }}>{name}</Title>
+          <Title style={styles.nameTitle}>{name}</Title>
         </View>
         <View style={{ paddingTop: 10 }}>
           <DrawerItemList {...props} />
         </View>
-        <View
-          style={{ padding: 20, flexDirection: "row", alignItems: "center" }}
-        >
+        <View style={styles.darkThemeContainer}>
           <Title style={{ fontSize: 16 }}>Dark Theme</Title>
           <View style={{ marginLeft: 20 }}>
             <Switch
@@ -103,13 +74,7 @@ export default CustomDrawer = (props) => {
             />
           </View>
         </View>
-        <View
-          style={{
-            padding: 20,
-            flexDirection: "row",
-            alignItems: "flex-start",
-          }}
-        >
+        <View style={styles.changeLanguageContainer}>
           <Title style={{ fontSize: 16, marginRight: 30 }}>Language</Title>
           <RadioButton.Group
             onValueChange={(newValue) => setValue(newValue)}
@@ -128,13 +93,7 @@ export default CustomDrawer = (props) => {
           </RadioButton.Group>
         </View>
       </DrawerContentScrollView>
-      <View
-        style={{
-          paddingVertical: 20,
-          borderTopWidth: 1,
-          borderTopColor: "#CCC",
-        }}
-      >
+      <View style={styles.footerContainer}>
         <DrawerItem
           icon={({ color, size }) => (
             <Icon name="exit-to-app" color={color} size={size} />
@@ -147,4 +106,29 @@ export default CustomDrawer = (props) => {
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  avatarContainer: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#CCC",
+  },
+  nameTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  darkThemeContainer: {
+    padding: 20,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  changeLanguageContainer: {
+    padding: 20,
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
+  footerContainer: {
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderTopColor: "#CCC",
+  },
+})
